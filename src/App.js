@@ -29,7 +29,7 @@ import OpenRoute from "./components/auth/OpenRoute";
 import VerifyEmail from "./Pages/VerifyEmail";
 import ForgotPassword from "./Pages/ForgotPassword"
 import UpdatePassword from "./Pages/UpdatePassword";
-import Editprofile from "./components/dashboard/Editprofile";
+import { GetAllEvent } from "./api/Services/Eventapi/GetAllEvent";
 
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
   useEffect(() => {
     // Check cookie & fetch user details if logged in
     dispatch(checkAuthStatus());
+    dispatch(GetAllEvent());
   }, []);
 
 
@@ -106,14 +107,6 @@ function App() {
           
           }
          /> 
-
-         <Route path="/dashboard/edit-profile" element={
-          <PrivateRoute>
-            <Editprofile/>
-          </PrivateRoute>
-         }/>
-
-
 
           <Route path="*" element={<Error />} />
         </Routes>

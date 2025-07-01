@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
 };
 
-const authSlice = createSlice({
+const createEvent = createSlice({
   name: "createEvent",
   initialState,
   reducers: {
@@ -15,5 +15,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { createEventData, setLoading } = authSlice.actions;
-export default authSlice.reducer;
+export const { createEventData, setLoading } = createEvent.actions;
+export default createEvent.reducer;

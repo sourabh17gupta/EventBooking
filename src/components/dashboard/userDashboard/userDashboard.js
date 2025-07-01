@@ -1,9 +1,20 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Profile from '../Profile'
 import MyEvent from './MyEvent'
+import GetAttendeeEventApi from '../../../api/Services/Eventapi/GetAttendeeEvent'
+import { apiConnector } from '../../../api/apiconnector'
 
 function UserDashboard() {
+  const attendeeEvent = useSelector(state => state.attendeeEvent.events)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!attendeeEvent || attendeeEvent.length === 0) {
+    dispatch(GetAttendeeEventApi())
+    }
+  }, [dispatch])
+  console.log(attendeeEvent)
   const [activeTab, setActiveTab] = useState('profile')
   const { user } = useSelector((state) => state.profile)
   return (

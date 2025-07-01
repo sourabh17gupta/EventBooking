@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -31,7 +31,7 @@ function EventDetail() {
     socketRef.current.on("connect", () => {
       console.log("Socket connected:", socketRef.current.id);
     });
-
+    
     return () => {
       socketRef.current.disconnect();
     };
@@ -177,7 +177,7 @@ function EventDetail() {
             <p><span className="text-blue-400 font-semibold">Date:</span> {eventData.date}</p>
             <p><span className="text-blue-400 font-semibold">Venue:</span> {eventData.venue}</p>
             <p><span className="text-blue-400 font-semibold">Price:</span> ₹{eventData.price || "Free"}</p>
-            <p><span className="text-blue-400 font-semibold">Category:</span> {eventData.category?.name || "N/A"}</p>
+            <p><span className="text-blue-400 font-semibold">Category:</span> {eventData.category?.category || "N/A"}</p>
             <p><span className="text-blue-400 font-semibold">Description:</span> {eventData.description}</p>
           </div>
 
