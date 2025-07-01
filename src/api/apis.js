@@ -13,6 +13,8 @@ export const endpoints = {
 
 export const userendpoints = {
   USER_INFO_API : BASE_URL +  "/user",//tested
+  UPDATE_PROFILE : BASE_URL + "/user/updateProfile",
+  USER_EVENT_API :BASE_URL + "/event/attendeeDashboard"
 }
 
 
@@ -29,10 +31,14 @@ export const adminendpoints = {
 }
 
 export const eventsendpoints = {
+  GET_ALL_EVENT : BASE_URL + '/event',
   GET_EVENT_BY_ID : BASE_URL + "/eventById"//tested
 }
 export const commentendpoints = {
   COMMENT_PREV : BASE_URL + "/eventComment"//tested
+}
+export const ticketendpoint = {
+  ticket_api : BASE_URL + "/ticket"//tested
 }
 
 export const paymentendpoints = {

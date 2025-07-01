@@ -16,7 +16,7 @@ const EventsByCategory = () => {
   if (isLoading) return <p className="text-white text-center mt-10">Loading...</p>;
   if (error) return <p className="text-red-400 text-center mt-10">Error: {error.message}</p>;
 
-  const events = Array.isArray(data) ? data : [];
+  const events = Array.isArray(data) ? data : [];//if data assignr
 
   return (
     <div className="px-4 py-8 text-white bg-[#000000]">
@@ -34,7 +34,7 @@ const EventsByCategory = () => {
             />
             <div className="p-4 flex flex-col justify-between flex-grow">
               <div>
-                <h3 className="text-xl font-semibold mb-1">{event.title}</h3>
+                <h3 className="text-xl font-semibold mb-1">{event.name}</h3>
                 <p className="text-sm text-gray-400 mb-2">{event.description}</p>
                 <p className="text-sm text-gray-300">{event.venue}</p>
                 <p className="text-sm text-gray-300">{event.date}</p>

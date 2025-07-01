@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "framer-motion": "^12.18.1",
+    "fuse.js": "^7.1.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.514.0",
     "mapbox-gl": "^3.12.0",

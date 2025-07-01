@@ -69,7 +69,7 @@ export const EventSwiper3 = () => {
                 {e.date || "TBA"}
               </p>
               <p className="text-[10px] md:text-xs text-gray-400">
-                {e.category?.name || "Uncategorized"}
+                {e.category?.category || "Uncategorized"}
               </p>
             </div>
 

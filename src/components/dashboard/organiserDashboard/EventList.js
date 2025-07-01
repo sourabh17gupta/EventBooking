@@ -48,7 +48,7 @@ const EventList = () => {
               <p className="text-sm text-gray-300">
                 {moment(event.date).format('MMMM Do, YYYY')}
               </p>
-              <p className="text-sm text-gray-400">{event.category}</p>
+              <p className="text-sm text-gray-400">{event.category?.category}</p>
             </div>
 
             {/* Right Stats */}
