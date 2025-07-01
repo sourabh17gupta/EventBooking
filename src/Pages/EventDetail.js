@@ -23,6 +23,8 @@ function EventDetail() {
 
   // Socket setup
   useEffect(() => {
+    if (!user) return;
+
     socketRef.current = io(process.env.REACT_APP_SOCKET_URL, {
       transports: ["websocket"],
       withCredentials: true,
@@ -31,13 +33,13 @@ function EventDetail() {
     socketRef.current.on("connect", () => {
       console.log("Socket connected:", socketRef.current.id);
     });
-    
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
 
-  // Fetch event and comments
+    return () => {
+      if (socketRef.current) socketRef.current.disconnect();
+    };
+  }, [user]);
+
+  // Fetch event and comments (comments only if logged in)
   useEffect(() => {
     const fetchEventAndComments = async () => {
       try {
@@ -45,19 +47,21 @@ function EventDetail() {
         if (data) setEventData(data);
         else toast.error("Error fetching event data");
 
-        const previousComments = await GetPrevComment(id);
-        const enriched = (previousComments || []).map((c) => ({
-          ...c,
-          isOwn: user && c.senderId?.toString() === user._id?.toString(),
-        }));
-        setComments(enriched.sort((a, b) => new Date(a.time) - new Date(b.time)));
+        if (user) {
+          const previousComments = await GetPrevComment(id);
+          const enriched = (previousComments || []).map((c) => ({
+            ...c,
+            isOwn: c.senderId?.toString() === user._id?.toString(),
+          }));
+          setComments(enriched.sort((a, b) => new Date(a.time) - new Date(b.time)));
+        }
       } catch (err) {
         toast.error("Error fetching event or comments");
         console.error(err);
       }
     };
 
-    if (id && user) fetchEventAndComments();
+    if (id) fetchEventAndComments();
   }, [id, user]);
 
   // Real-time comments
@@ -103,57 +107,54 @@ function EventDetail() {
   };
 
   const handlePayment = async () => {
-  try {
-    const order = await createOrderAPI(id); 
-    console.log("Order", order);
+    try {
+      const order = await createOrderAPI(id);
 
-    const razorpayKey = process.env.REACT_APP_RZ_KEY_ID;
+      const razorpayKey = process.env.REACT_APP_RZ_KEY_ID;
 
-    const options = {
-      key: razorpayKey,
-      amount: order.amount,
-      currency: order.currency,
-      name: "TicketApp",
-      description: "Event Booking",
-      order_id: order.id,
-      handler: async function (response) {
-        try {
-          console.log("razorpay id",response.razorpay_order_id);
-          const verifyRes = await verifyPaymentAPI({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            eventid: id,
-          });
+      const options = {
+        key: razorpayKey,
+        amount: order.amount,
+        currency: order.currency,
+        name: "TicketApp",
+        description: "Event Booking",
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            const verifyRes = await verifyPaymentAPI({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              eventid: id,
+            });
 
-          if (verifyRes.success) {
-            toast.success("Payment verified & booking successful!");
-            setShowPaymentModal(false);
-          } else {
-            toast.error("Payment verification failed");
+            if (verifyRes.success) {
+              toast.success("Payment verified & booking successful!");
+              setShowPaymentModal(false);
+            } else {
+              toast.error("Payment verification failed");
+            }
+          } catch (err) {
+            toast.error("Could not verify payment");
+            console.error(err);
           }
-        } catch (err) {
-          toast.error("Could not verify payment");
-          console.error(err);
-        }
-      },
-      prefill: {
-        name: user.firstName,
-        email: user.email,
-      },
-      theme: {
-        color: "#1e40af",
-      },
-    };
+        },
+        prefill: {
+          name: user.firstName,
+          email: user.email,
+        },
+        theme: {
+          color: "#1e40af",
+        },
+      };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error("Payment error", err);
-    toast.error("Error starting payment");
-  }
-};
-
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Payment error", err);
+      toast.error("Error starting payment");
+    }
+  };
 
   if (!eventData) return <div className="text-white p-8">Loading event...</div>;
 
