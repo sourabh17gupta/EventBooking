@@ -124,9 +124,9 @@ const handlePayment = async () => {
 
         const options = {
           key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-          amount: data.order.amount,
-          currency: data.order.currency,
-          order_id: data.order.id,
+          amount: data.data.amount,
+          currency: data.data.currency,
+          order_id: data.data.id,
           name: "Testing 1",
           description: "Test Transaction",
           handler: function (response) {
