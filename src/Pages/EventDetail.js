@@ -122,13 +122,13 @@ const handlePayment = async () => {
             eventid:id // Rs. 500
         });
 
-      const { amount, order_id, currency } = orderRes.data.order;
+      const { amount, id:order_id, currency } = orderRes.data.order;
 
         const options = {
           key: process.env.REACT_APP_RAZORPAY_KEY_ID,
           amount: amount,
           currency: currency,
-          order_id: order_id,
+          order_id: id,
           name: "Testing 1",
           description: "Test Transaction",
           method: "upi",
