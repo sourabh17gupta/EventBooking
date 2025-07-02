@@ -109,54 +109,64 @@ function EventDetail() {
   };
 
 const handlePayment = async () => {
-  try{
-        const res = await loadRazorpayScript();
-
-        if (!res) {
-            alert("Razorpay SDK failed to load");
-            return;
-        }
-
-        // 1. Create order on backend
-        const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
-            eventid:id // Rs. 500
-        });
-
-      const { amount, id: order_id, currency } = orderRes.data.order;
-
-        const options = {
-          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-          amount: amount,
-          currency: currency,
-          order_id: id,
-          name: "Testing 1",
-          description: "Test Transaction",
-          method: "upi",
-          handler: function (response) {
-            toast.success("Your event ticket is in your dashboard!");
-            setShowPaymentModal(false);
-          },
-
-          prefill: {
-            name: "John Doe",
-            email: "john@example.com",
-            contact: "9999999999",
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-
-      } 
-      
-       catch (err) {
-      console.error("Payment error", err);
-      toast.error("Error starting payment");
+  try {
+    const res = await loadRazorpayScript();
+    if (!res) {
+      toast.error("Razorpay SDK failed to load");
+      return;
     }
-  };
+
+    // Step 1: Create order
+    const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
+      eventid: id,
+    });
+
+    const { amount, id: order_id, currency } = orderRes.data.order;
+
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      amount: amount,
+      currency: currency,
+      order_id: order_id,
+      name: "Event Booking",
+      description: "Book your event seat",
+      handler: async function (response) {
+        toast.info(" Payment received. Verifying ticket...");
+
+        // Step 2: Wait & poll the backend to see if ticket is assigned
+        const interval = setInterval(async () => {
+          try {
+            const checkRes = await axios.get(`https://eventbookingbackend.onrender.com/eventbookingweb/has-ticket?eventid=${id}`);
+
+            if (checkRes.data.success && checkRes.data.ticketConfirmed) {
+              clearInterval(interval);
+              toast.success(" Ticket confirmed! Check your dashboard.");
+              setShowPaymentModal(false);
+            }
+          } catch (err) {
+            console.error("Ticket check error:", err);
+            clearInterval(interval);
+            toast.error("Something went wrong while confirming your ticket.");
+          }
+        }, 5000); // Poll every 5s (optional: max 3 tries)
+      },
+      prefill: {
+        name: "John Doe",
+        email: "john@example.com",
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error("Payment error", err);
+    toast.error("Error starting payment");
+  }
+};
 
   if (!eventData) return <div className="text-white p-8">Loading event...</div>;
 
