@@ -70,7 +70,7 @@ function EventDetail() {
   useEffect(() => {
     if (!socketRef.current || !user) return;
 
-    const eventName = `receive-comment:${id}`;
+    const eventName = receive-comment:${id};
     const handleNewComment = (comment) => {
       const enriched = {
         ...comment,
@@ -122,7 +122,7 @@ const handlePayment = async () => {
             eventid:id // Rs. 500
         });
 
-      const { amount, id:order_id, currency } = orderRes.data.order;
+      const { amount, id: order_id, currency } = orderRes.data.order;
 
         const options = {
           key: process.env.REACT_APP_RAZORPAY_KEY_ID,
@@ -187,9 +187,9 @@ const handlePayment = async () => {
 
           <div className="flex justify-center mt-10">
             <button
-              className={`${
+              className={${
                 isCommentAndBookingAllowed ? "bg-blue-800 hover:bg-blue-900" : "bg-gray-500 cursor-not-allowed"
-              } text-white font-semibold px-10 py-3 rounded-full transition-all`}
+              } text-white font-semibold px-10 py-3 rounded-full transition-all}
               onClick={() => {
                 if (!isCommentAndBookingAllowed) {
                   toast.error("Please login as a regular user to book the event.");
@@ -278,11 +278,11 @@ function CommentsSection({ comments, user, isCommentAndBookingAllowed, newCommen
           <p className="text-gray-400">No comments yet.</p>
         ) : (
           comments.map((c, idx) => (
-            <div key={idx} className={`flex ${c.isOwn ? "justify-end" : "justify-start"}`}>
+            <div key={idx} className={flex ${c.isOwn ? "justify-end" : "justify-start"}}>
               <div
-                className={`max-w-xs p-2 rounded-md ${
+                className={max-w-xs p-2 rounded-md ${
                   c.isOwn ? "bg-blue-600 text-white text-right" : "bg-white/20 text-white"
-                }`}
+                }}
               >
                 {!c.isOwn && <p className="text-xs text-gray-300 font-medium">{c.firstName}</p>}
                 <p>{c.comment}</p>
