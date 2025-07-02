@@ -70,7 +70,7 @@ function EventDetail() {
   useEffect(() => {
     if (!socketRef.current || !user) return;
 
-    const eventName = receive-comment:${id};
+    const eventName = `receive-comment:${id}`;
     const handleNewComment = (comment) => {
       const enriched = {
         ...comment,
