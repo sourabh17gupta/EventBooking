@@ -131,6 +131,7 @@ const handlePayment = async () => {
           order_id: id,
           name: "Testing 1",
           description: "Test Transaction",
+          method: "upi",
           handler: function (response) {
             alert("✅ Payment completed! You'll get confirmation soon.");
             // You may save response for debugging if needed
