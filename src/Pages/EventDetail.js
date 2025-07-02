@@ -118,15 +118,15 @@ const handlePayment = async () => {
         }
 
         // 1. Create order on backend
-        const { response } = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
+        const { data } = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
             eventid:id // Rs. 500
         });
 
         const options = {
           key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-          amount: response.data.amount,
-          currency: response.data.currency,
-          order_id: response.data.id,
+          amount: data.data.amount,
+          currency: data.data.currency,
+          order_id: data.data.id,
           name: "Testing 1",
           description: "Test Transaction",
           handler: function (response) {
