@@ -133,8 +133,8 @@ const handlePayment = async () => {
           description: "Test Transaction",
           method: "upi",
           handler: function (response) {
-            alert("✅ Payment completed! You'll get confirmation soon.");
-            // You may save response for debugging if needed
+            toast.success("Your event ticket is in your dashboard!");
+            setShowPaymentModal(false);
           },
 
           prefill: {
