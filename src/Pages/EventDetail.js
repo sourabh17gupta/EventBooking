@@ -6,8 +6,6 @@ import { io } from "socket.io-client";
 
 import GetEventByIdAPI from "../api/Services/Eventapi/GetEventById";
 import GetPrevComment from "../api/Services/Eventapi/GetPrevComment";
-// import { createOrderAPI } from "../api/Services/PaymentAPI/CreateOrderApi";
-// import { verifyPaymentAPI } from "../api/Services/PaymentAPI/verifyPayment";
 import { loadRazorpayScript } from '../Utils/loadRazorpay';
 import axios from "axios";
 
@@ -23,10 +21,8 @@ function EventDetail() {
   const { user } = useSelector((state) => state.profile);
   const isCommentAndBookingAllowed = user && user.role !== "Admin" && user.role !== "Organiser";
 
-  // Socket setup
   useEffect(() => {
     if (!user) return;
-
     socketRef.current = io(process.env.REACT_APP_SOCKET_URL, {
       transports: ["websocket"],
       withCredentials: true,
@@ -41,7 +37,6 @@ function EventDetail() {
     };
   }, [user]);
 
-  // Fetch event and comments (comments only if logged in)
   useEffect(() => {
     const fetchEventAndComments = async () => {
       try {
@@ -66,7 +61,6 @@ function EventDetail() {
     if (id) fetchEventAndComments();
   }, [id, user]);
 
-  // Real-time comments
   useEffect(() => {
     if (!socketRef.current || !user) return;
 
@@ -83,7 +77,6 @@ function EventDetail() {
     return () => socketRef.current.off(eventName, handleNewComment);
   }, [id, user]);
 
-  // Modal scroll fix
   useEffect(() => {
     document.body.style.overflow = showPaymentModal ? "hidden" : "auto";
     return () => {
@@ -108,56 +101,49 @@ function EventDetail() {
     }
   };
 
-const handlePayment = async () => {
-  try{
-        const res = await loadRazorpayScript();
+  const handlePayment = async () => {
+    try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert("Razorpay SDK failed to load");
+        return;
+      }
 
-        if (!res) {
-            alert("Razorpay SDK failed to load");
-            return;
-        }
-
-        // 1. Create order on backend
-        const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
-            eventid:id // Rs. 500
-        });
+      const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
+        eventid: id
+      });
 
       const { amount, id: order_id, currency } = orderRes.data.order;
 
-        const options = {
-          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-          amount: amount,
-          currency: currency,
-          order_id: id,
-          name: "Testing 1",
-          description: "Test Transaction",
-          method: "upi",
-          handler: function (response) {
-            toast.success("Your event ticket is in your dashboard!");
-            setShowPaymentModal(false);
-          },
-
-          prefill: {
-            name: "John Doe",
-            email: "john@example.com",
-            contact: "9999999999",
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount,
+        currency,
+        order_id,
+        name: "Testing 1",
+        description: "Test Transaction",
+        handler: function () {
+          toast.success("Your event ticket is in your dashboard!");
+          setShowPaymentModal(false);
+        },
+        prefill: {
+          name: "John Doe",
+          email: "john@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
 
-      } 
-      
-       catch (err) {
+    } catch (err) {
       console.error("Payment error", err);
       toast.error("Error starting payment");
     }
-  }; 
-
+  };
 
   if (!eventData) return <div className="text-white p-8">Loading event...</div>;
 
@@ -187,9 +173,9 @@ const handlePayment = async () => {
 
           <div className="flex justify-center mt-10">
             <button
-              className={${
+              className={`$${
                 isCommentAndBookingAllowed ? "bg-blue-800 hover:bg-blue-900" : "bg-gray-500 cursor-not-allowed"
-              } text-white font-semibold px-10 py-3 rounded-full transition-all}
+              } text-white font-semibold px-10 py-3 rounded-full transition-all`}
               onClick={() => {
                 if (!isCommentAndBookingAllowed) {
                   toast.error("Please login as a regular user to book the event.");
@@ -278,11 +264,11 @@ function CommentsSection({ comments, user, isCommentAndBookingAllowed, newCommen
           <p className="text-gray-400">No comments yet.</p>
         ) : (
           comments.map((c, idx) => (
-            <div key={idx} className={flex ${c.isOwn ? "justify-end" : "justify-start"}}>
+            <div key={idx} className={`flex ${c.isOwn ? "justify-end" : "justify-start"}`}>
               <div
-                className={max-w-xs p-2 rounded-md ${
+                className={`max-w-xs p-2 rounded-md ${
                   c.isOwn ? "bg-blue-600 text-white text-right" : "bg-white/20 text-white"
-                }}
+                }`}
               >
                 {!c.isOwn && <p className="text-xs text-gray-300 font-medium">{c.firstName}</p>}
                 <p>{c.comment}</p>
