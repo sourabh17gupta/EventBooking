@@ -118,7 +118,7 @@ const handlePayment = async () => {
         }
 
         // 1. Create order on backend
-        const { data } = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
+        const data = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
             eventid:id // Rs. 500
         });
 
