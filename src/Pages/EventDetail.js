@@ -6,8 +6,10 @@ import { io } from "socket.io-client";
 
 import GetEventByIdAPI from "../api/Services/Eventapi/GetEventById";
 import GetPrevComment from "../api/Services/Eventapi/GetPrevComment";
-import { createOrderAPI } from "../api/Services/PaymentAPI/CreateOrderApi";
-import { verifyPaymentAPI } from "../api/Services/PaymentAPI/verifyPayment";
+// import { createOrderAPI } from "../api/Services/PaymentAPI/CreateOrderApi";
+// import { verifyPaymentAPI } from "../api/Services/PaymentAPI/verifyPayment";
+import { loadRazorpayScript } from '../Utils/loadRazorpay';
+import axios from "axios";
 
 function EventDetail() {
   const { id } = useParams();
@@ -106,51 +108,48 @@ function EventDetail() {
     }
   };
 
-  const handlePayment = async () => {
-    try {
-      const order = await createOrderAPI(id);
+const handlePayment = async () => {
+  try{
+        const res = await loadRazorpayScript();
 
-      const razorpayKey = process.env.REACT_APP_RZ_KEY_ID;
+        if (!res) {
+            alert("Razorpay SDK failed to load");
+            return;
+        }
 
-      const options = {
-        key: razorpayKey,
-        amount: order.amount,
-        currency: order.currency,
-        name: "TicketApp",
-        description: "Event Booking",
-        order_id: order.id,
-        handler: async function (response) {
-          try {
-            const verifyRes = await verifyPaymentAPI({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              eventid: id,
-            });
+        // 1. Create order on backend
+        const { data } = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
+            eventid:id // Rs. 500
+        });
 
-            if (verifyRes.success) {
-              toast.success("Payment verified & booking successful!");
-              setShowPaymentModal(false);
-            } else {
-              toast.error("Payment verification failed");
-            }
-          } catch (err) {
-            toast.error("Could not verify payment");
-            console.error(err);
-          }
-        },
-        prefill: {
-          name: user.firstName,
-          email: user.email,
-        },
-        theme: {
-          color: "#1e40af",
-        },
-      };
+        const options = {
+          key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+          amount: data.order.amount,
+          currency: data.order.currency,
+          order_id: data.order.id,
+          name: "Testing 1",
+          description: "Test Transaction",
+          handler: function (response) {
+            alert("✅ Payment completed! You'll get confirmation soon.");
+            // You may save response for debugging if needed
+          },
+
+          prefill: {
+            name: "John Doe",
+            email: "john@example.com",
+            contact: "9999999999",
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-    } catch (err) {
+
+      } 
+      
+       catch (err) {
       console.error("Payment error", err);
       toast.error("Error starting payment");
     }
