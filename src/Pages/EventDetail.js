@@ -145,7 +145,8 @@ function EventDetail() {
     }
   };
 
-  if (!eventData) return <div className="text-white p-8">Loading event...</div>;
+  // ✅ Show loading spinner while event data is loading
+  if (!eventData) return <LoadingSpinner message="Loading event..." />;
 
   return (
     <div className="bg-black min-h-screen text-white px-4 py-6 md:px-16 mt-5 md:pt-10 relative">
@@ -173,7 +174,7 @@ function EventDetail() {
 
           <div className="flex justify-center mt-10">
             <button
-              className={`$${
+              className={`${
                 isCommentAndBookingAllowed ? "bg-blue-800 hover:bg-blue-900" : "bg-gray-500 cursor-not-allowed"
               } text-white font-semibold px-10 py-3 rounded-full transition-all`}
               onClick={() => {
@@ -302,6 +303,14 @@ function CommentsSection({ comments, user, isCommentAndBookingAllowed, newCommen
         <p className="text-gray-400 text-sm mt-2">Login to add a comment.</p>
       )}
     </>
+  );
+}
+function LoadingSpinner({ message = "Loading..." }) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-50"></div>
+      <div className="mt-4 text-blue-400 font-medium">{message}</div>
+    </div>
   );
 }
 
