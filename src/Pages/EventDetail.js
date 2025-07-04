@@ -145,8 +145,13 @@ function EventDetail() {
     }
   };
 
-  // ✅ Show loading spinner while event data is loading
-  if (!eventData) return <LoadingSpinner message="Loading event..." />;
+  if (!eventData) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white text-xl">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black min-h-screen text-white px-4 py-6 md:px-16 mt-5 md:pt-10 relative">
@@ -303,14 +308,6 @@ function CommentsSection({ comments, user, isCommentAndBookingAllowed, newCommen
         <p className="text-gray-400 text-sm mt-2">Login to add a comment.</p>
       )}
     </>
-  );
-}
-function LoadingSpinner({ message = "Loading..." }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-50"></div>
-      <div className="mt-4 text-blue-400 font-medium">{message}</div>
-    </div>
   );
 }
 
