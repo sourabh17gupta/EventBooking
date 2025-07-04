@@ -120,15 +120,15 @@ function EventDetail() {
         amount,
         currency,
         order_id,
-        name: "Testing 1",
-        description: "Test Transaction",
+        name: "Event Booking",
+        description: "Event ticket payment",
         handler: function () {
           toast.success("Your event ticket is in your dashboard!");
           setShowPaymentModal(false);
         },
         prefill: {
-          name: "John Doe",
-          email: "john@example.com",
+          name: user?.firstName || "Guest",
+          email: user?.email || "guest@example.com",
           contact: "9999999999",
         },
         theme: {
@@ -147,7 +147,7 @@ function EventDetail() {
 
   if (!eventData) {
     return (
-      <div className="flex items-center justify-center h-screen bg-black text-white text-xl">
+      <div className="fixed inset-0 flex items-center justify-center bg-black text-white text-2xl z-50">
         Loading...
       </div>
     );
