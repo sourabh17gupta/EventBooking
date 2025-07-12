@@ -17,6 +17,7 @@ function UserEventList() {
     try {
       const response = await apiConnector('POST', ticket_api, { eventid: eventId })
       setTicket(response.data.ticket)
+      console.log(ticket);
       setShowModal(true)
     } catch (error) {
       console.error('View Ticket Error:', error)
