@@ -5,21 +5,38 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 const EventsByCategory = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const category = searchParams.get('category');
-
-
 
   const { data, isLoading, error } = useEventsByCategory(category);
 
-  if (!category) return <p className="text-white text-center mt-10">No category selected.</p>;
-  if (isLoading) return <p className="text-white text-center mt-10">Loading...</p>;
-  if (error) return <p className="text-red-400 text-center mt-10">Error: {error.message}</p>;
+  if (!category) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black">
+        <p className="text-white text-xl">No category selected.</p>
+      </div>
+    );
+  }
 
-  const events = Array.isArray(data) ? data : [];//if data assignr
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black">
+        <p className="text-white text-xl">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black">
+        <p className="text-red-400 text-xl">Error: {error.message}</p>
+      </div>
+    );
+  }
+
+  const events = Array.isArray(data) ? data : [];
 
   return (
-    <div className="px-4 py-8 text-white bg-[#000000]">
+    <div className="px-4 py-8 text-white bg-[#000000] min-h-screen">
       <h2 className="text-2xl font-bold mt-10 mb-6 text-center">Events in {category}</h2>
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
