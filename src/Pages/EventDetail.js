@@ -109,9 +109,10 @@ function EventDetail() {
         return;
       }
 
-      const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment", {
-        eventid: id
-      });
+      const orderRes = await axios.post("https://eventbookingbackend.onrender.com/eventbookingweb/payment",
+       { eventid: id },
+      { withCredentials: true } 
+    );
 
       const { amount, id: order_id, currency } = orderRes.data.order;
 
