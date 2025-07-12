@@ -15,9 +15,19 @@ function UserEventList() {
     if (!eventId) return toast.error('Invalid Event ID')
 
     try {
-      const response = await apiConnector('POST', ticket_api, { eventid: eventId })
-      setTicket(response.data.ticket)
-      console.log(ticket);
+      const response = await apiConnector(
+        'POST',
+        ticket_api,
+        { eventid: eventId },
+        {
+          withCredentials: true,
+        }
+      )
+
+      const fetchedTicket = response?.data?.ticket
+      if (!fetchedTicket) return toast.error('Ticket not found.')
+
+      setTicket(fetchedTicket)
       setShowModal(true)
     } catch (error) {
       console.error('View Ticket Error:', error)
@@ -58,7 +68,6 @@ function UserEventList() {
     </div>
   )
 }
-
 
 function TicketModal({ ticket, onClose }) {
   if (!ticket) return null
