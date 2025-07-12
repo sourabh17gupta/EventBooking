@@ -116,7 +116,7 @@ function EventDetail() {
       const { amount, id: order_id, currency } = orderRes.data.order;
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        key: process.env.REACT_APP_RZ_KEY_ID,
         amount,
         currency,
         order_id,
