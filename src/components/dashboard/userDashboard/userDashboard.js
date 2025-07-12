@@ -15,7 +15,7 @@ function UserDashboard() {
     if (!attendeeEvent || attendeeEvent.length === 0) {
       dispatch(GetAttendeeEventApi())
     }
-  }, [attendeeEvent, dispatch])
+  }, [dispatch])
 
   return (
     <div className="p-6">
