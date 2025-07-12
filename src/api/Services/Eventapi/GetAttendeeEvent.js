@@ -13,6 +13,8 @@ function GetAttendeeEventApi() {
     try{
        const response = await apiConnector("GET" , USER_EVENT_API);
        const data = response.data.response;
+
+        console.log("Ticket response:",response);
        if(!data){
         throw new Error(response.data.message|| "No data received")
        }
