@@ -33,12 +33,7 @@ export const EventSwiper3 = () => {
 
   return (
     <div className="w-full max-w-screen-xl mx-auto mt-6 px-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl md:text-2xl font-bold text-white">
-          Top Picks Near You
-        </h2>
-      </div>
+
 
       <div className="h-px bg-white/20 mb-4" />
 
