@@ -24,6 +24,11 @@ function HomePage() {
       <div className="mt-12 px-4 md:px-8">
         <EventSwiper2 />
       </div>
+    <div className="mt-12 px-4 md:px-8">
+        <p className="text-white text-2xl font-bold border-b border-gray-500 pb-2">
+          Top Picks Near You
+        </p>
+      </div>
       <div className="mt-12 px-4 md:px-8 ">
         <EventSwiper3 />
       </div>
