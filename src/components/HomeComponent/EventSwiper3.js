@@ -34,9 +34,6 @@ export const EventSwiper3 = () => {
   return (
     <div className="w-full max-w-screen-xl mx-auto mt-6 px-4">
 
-
-      <div className="h-px bg-white/20 mb-4" />
-
       {/* Event Cards */}
       <div className="flex flex-col gap-4">
         {visibleEvents.map((e, idx) => (
